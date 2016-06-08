@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+require 'nokogiri'
+require 'open-uri'
+
+PAGE_URL = "https://gocardless.com"
+links = []
+images = []
+doc = Nokogiri::HTML(open(PAGE_URL))
+doc.css('a').each do |url|
+  link = url['href'].match('gocardless') ? url['href'] : PAGE_URL + url['href']
+   links << link unless link.match('help.gocardless')
+   links.compact.uniq.each do |link|
+     page = Nokogiri::HTML(open(link))
+     page.css('img').each do |img|
+       images << img['src']
+     end
+
+     p images
+
+   end
+ end
